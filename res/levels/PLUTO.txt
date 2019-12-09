@@ -1,0 +1,3 @@
+res/levels/pluto1.png
+50
+res/levels/pluto2.png

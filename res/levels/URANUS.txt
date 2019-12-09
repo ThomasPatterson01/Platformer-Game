@@ -1,0 +1,3 @@
+res/levels/uranus1.png
+150
+res/levels/uranus2.png

@@ -1,0 +1,3 @@
+res/levels/earth1.png
+150
+res/levels/earth2.png

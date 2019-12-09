@@ -1,0 +1,3 @@
+res/levels/mars1.png
+150
+res/levels/mars2.png
