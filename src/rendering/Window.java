@@ -25,7 +25,7 @@ public class Window {
 		
 		
 		//¡yeet us a nice window!
-		id = glfwCreateWindow(width, height, title, NULL, NULL);
+		id = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), NULL);
 		glfwSetWindowPos(id, 100, 100);
 		
 		//check window creation was successful

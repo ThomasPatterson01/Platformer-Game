@@ -135,7 +135,7 @@ public class Renderer {
 		uniTex = program.getUniformLocation("texImage");
 		program.setUniform(uniTex, 0);
 				
-		//set view uniform matrix
+		//set model uniform matrix
 		uniModel = program.getUniformLocation("model");
 		model = new Matrix4f();
 		program.setUniform(uniModel, model);

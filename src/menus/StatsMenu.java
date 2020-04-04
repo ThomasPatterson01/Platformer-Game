@@ -159,6 +159,7 @@ public class StatsMenu extends Menu{
 			scoreBtn.setClicked(false);
 			scoreBtn.setHovering(false);
 			graph.setYLabel("Score");
+			graph.setConvertYLabelToTimeFormat(false);
 			graph.showGraph(attemptData, scoreData);
 		}
 		//show kills on graph
@@ -166,6 +167,7 @@ public class StatsMenu extends Menu{
 			killsBtn.setClicked(false);
 			killsBtn.setHovering(false);
 			graph.setYLabel("Kills");
+			graph.setConvertYLabelToTimeFormat(false);
 			graph.showGraph(attemptData, killData);
 		}
 		//show time on graph
@@ -173,6 +175,8 @@ public class StatsMenu extends Menu{
 			timeBtn.setClicked(false);
 			timeBtn.setHovering(false);
 			graph.setYLabel("Time");
+
+			graph.setConvertYLabelToTimeFormat(true);
 			graph.showGraph(attemptData, timeData);
 		}
 		//show level on graph
@@ -180,6 +184,7 @@ public class StatsMenu extends Menu{
 			levelBtn.setClicked(false);
 			levelBtn.setHovering(false);
 			graph.setYLabel("Levels Completed");
+			graph.setConvertYLabelToTimeFormat(false);
 			graph.showGraph(attemptData, levelData);
 		}
 	}

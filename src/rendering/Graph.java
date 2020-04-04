@@ -12,6 +12,7 @@ public class Graph {
 	
 	private Text xLabel;
 	private Text yLabel;
+	private boolean convertYLabelToTimeFormat = false;
 	private Text maxXLabel;
 	private Text maxYLabel;
 	
@@ -35,8 +36,8 @@ public class Graph {
 	}
 	
 	public void render(Renderer renderer, Texture texture, float alpha) {
-		xAxis.render(renderer, texture, alpha);
-		yAxis.render(renderer, texture, alpha);
+		xAxis.render(renderer, texture);
+		yAxis.render(renderer, texture);
 		
 		xLabel.render(renderer);
 		
@@ -52,7 +53,7 @@ public class Graph {
 		
 		//draw the actual graph
 		for (Line l : lines) {
-			l.render(renderer, texture, alpha);
+			l.render(renderer, texture);
 		}
 	}
 	
@@ -69,7 +70,13 @@ public class Graph {
 		
 		//set the maximum value labels for each axis
 		maxXLabel.setText(Integer.toString(maxX));
-		maxYLabel.setText(Integer.toString(maxY));
+		if (!convertYLabelToTimeFormat) maxYLabel.setText(Integer.toString(maxY));
+		else{
+			int minutes = (maxY / (60 * 1000));
+			float seconds = ((float)maxY / 1000) % 60;
+			maxYLabel.setText(String.format("%02d:%05.2f", minutes, seconds));
+		}
+
 		
 		//transformed values of the data
 		ArrayList<Integer> newXData = new ArrayList<>();
@@ -87,7 +94,7 @@ public class Graph {
 		//clear lines from previous lines
 		lines.clear();
 		
-		//add a line betwen each pair of consecuetive points
+		//add a line between each pair of consecutive points
 		for (int i = 0; i < xData.size()-1; i++) {
 			
 			//add the (x, y) of the graph to the points 
@@ -105,5 +112,9 @@ public class Graph {
 	
 	public void setYLabel(String label) {
 		yLabel.setText(label);
+	}
+
+	public void setConvertYLabelToTimeFormat(boolean convertYLabelToTimeFormat) {
+		this.convertYLabelToTimeFormat = convertYLabelToTimeFormat;
 	}
 }

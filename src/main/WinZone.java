@@ -44,7 +44,7 @@ public class WinZone extends Zone {
 	public void render(Renderer renderer, Texture texture, float alpha) {
 		
 		//so the flag lights up when hit by player
-		float transparency = litUp ? 0.9f : 0.6f;
+		float transparency = litUp ? 0.9f : 0.4f;
 		
 		//for now, rendered in its own batch.
 		renderer.begin();

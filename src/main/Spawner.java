@@ -26,7 +26,7 @@ public class Spawner {
 	
 	private Handler handler;
 	public static int CURRENT_SEED, SEED;
-	public static Level LEVEL = Level.Pluto;	
+	public static Level LEVEL = Level.Pluto;
 	private int xOffset = 0;
 	private int yOffset = 0;
 	
@@ -36,7 +36,7 @@ public class Spawner {
 		handler.getPostLevelMenu().setSpawner(this);
 	}
 	
-	//read the level file and spawn the correspoonding level
+	//read the level file and spawn the corresponding level
 	public void spawnLevel() {
 		
 		//reset the previous level
@@ -233,7 +233,7 @@ public class Spawner {
 			//adjust the offset so that the sections line up properly
 			if (noiseSeed == 0) yOffset -= height;
 			
-			handler.addZone(new KillZone(xOffset+noiseSeed*50/noiseInterval, yOffset-height-1000, 50, 50));
+			handler.addZone(new KillZone(xOffset+noiseSeed*50/noiseInterval, yOffset+height-300, 50, 50));
 			
 			//creates a ceiling (4 blocks deep) when the ceiling curve is below a certain value
 			//seed is divided by 5 to lengthen the ceilings
@@ -249,11 +249,9 @@ public class Spawner {
 			float holeProbability = 0.3f;
 			double holeNoiseValue = ImprovedNoise.noise((noiseSeed+noiseOffset+200)*2f, 1, 1);
 			if (holeNoiseValue+0.5 < holeProbability && Math.round(noiseSeed/noiseInterval)%5 != 0) continue;
-			
-			//another separate perlin curve for the depth of the blocks, on a range from 0 to 2
-			double blockDepthNoiseValue = ImprovedNoise.noise((noiseSeed+noiseOffset+400)/3f, 1, 1);
-			int blockDepth = (int) Math.round(2*(0.5+blockDepthNoiseValue));
-			
+
+			int blockDepth = 20;
+
 			//decide what type of block based on a separate perlin curve - so that the type is not dependent on height
 			//set block depth to 0 if melting, so that the player can fall through
 			double blockTypeNoiseValue = ImprovedNoise.noise((noiseSeed+noiseOffset+300)/2f, 1, 1);
@@ -261,7 +259,7 @@ public class Spawner {
 			float slipProbability = LEVEL.getSlipProbability();
 			float meltProbability = LEVEL.getMeltProbability();
 			if (blockTypeNoiseValue+0.5 < slipProbability) slip = true;
-			if (blockTypeNoiseValue+0.5 > 1-meltProbability) {melt = true; blockDepth = 0;}
+			if (blockTypeNoiseValue+0.5 > 1-meltProbability){ melt = true; blockDepth = 0;}
 			
 			//create the top block based on what type it should be
 			//then create the underlying blocks based on what the blockDepth is
@@ -270,7 +268,11 @@ public class Spawner {
 			else if (melt) b = new MeltingBlock(xOffset+noiseSeed*50/noiseInterval, yOffset+height, (float)(4*ImprovedNoise.noise(noiseSeed, 0, 0)));
 			else b = new Block(xOffset+noiseSeed*50/noiseInterval, yOffset+height);
 			handler.addBlock(b);
-			for (int h = height-blockDepth*50; h < height; h+=50) handler.addBlock(new Block(xOffset+noiseSeed*50/noiseInterval, yOffset+h));
+			for (int h = height-blockDepth*50; h < height; h+=50){
+				Block bl = new Block(xOffset+noiseSeed*50/noiseInterval, yOffset+h);
+				bl.setHitbox(false);
+				handler.addFakeBlock(bl);
+			}
 			
 			
 			//create an enemy every few blocks (but not at the start because the player spawns there)
@@ -291,6 +293,7 @@ public class Spawner {
 	//clear all sprites from the handler
 	public void clear() {
 		handler.clearBlocks();
+		handler.clearFakeBlocks();
 		handler.clearEnemies();
 		handler.clearBullets();
 		handler.clearZones();

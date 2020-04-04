@@ -5,12 +5,12 @@ import main.Handler;
 import main.Main;
 import main.Spawner;
 import matrix_math.Matrix4f;
-import rendering.Color;
-import rendering.Font;
-import rendering.Renderer;
-import rendering.Text;
-import rendering.Texture;
+import matrix_math.Vector4f;
+import rendering.*;
 import sprites.Background;
+import sprites.Player;
+
+import java.util.ArrayList;
 
 public class UI extends Menu{
 	
@@ -18,6 +18,10 @@ public class UI extends Menu{
 	private Text score;
 	private Button pause;
 	private Text fpsCounter;
+
+	private ArrayList<Line> healthOutline = new ArrayList<>();
+	private Rectangle health;
+	private float prevHealth = -1;
 	
 	//create all the necessary text/buttons as well as the background
 	public UI() {
@@ -32,6 +36,15 @@ public class UI extends Menu{
 		pause.setText(new Text("PAUSE", Main.WIDTH - 88, Main.HEIGHT - 38, new Font("Consolas", java.awt.Font.ITALIC, 20), new Color(0,0,0)));
 		
 		fpsCounter = new Text("FPS: [FPS]", 200, Main.HEIGHT-30, textFont, new Color(0.5f,0.5f,0.5f));
+
+		float healthX = 560, healthY = Main.HEIGHT - 70;
+		float healthW = 800, healthH = 30;
+
+		health = new Rectangle(healthX, healthY, healthW, healthH, new Color(0, 1, 0));
+		healthOutline.add(new Line(healthX, healthY, healthX, healthY+healthH, 3, new Color(1, 1, 1)));
+		healthOutline.add(new Line(healthX, healthY, healthX+healthW, healthY, 3, new Color(1, 1, 1)));
+		healthOutline.add(new Line(healthX+healthW, healthY, healthX+healthW, healthY+healthH, 3, new Color(1, 1, 1)));
+		healthOutline.add(new Line(healthX, healthY+healthH, healthX+healthW, healthY+healthH, 3, new Color(1, 1, 1)));
 	}
 
 	//ensure the background is updated and that the score is accurate
@@ -42,6 +55,16 @@ public class UI extends Menu{
 		fpsCounter.setText("FPS: " + Main.FPS);
 		planetName.setText(Spawner.LEVEL.getPlanetName());
 		background.setCol(Spawner.LEVEL.getBlockColor());
+
+		Player p = handler.getPlayer();
+		if (p == null) return;
+		if (p.getHealth() == prevHealth) return;
+		health.setWidth(800f*(p.getHealth())/p.getMaxHealth());
+		if (p.getHealth() < prevHealth){
+			Rectangle lost = new Rectangle(560+800f*(p.getHealth())/p.getMaxHealth(), Main.HEIGHT-70, 800f*(prevHealth - p.getHealth())/p.getMaxHealth(), 30, new Color(0, 1, 0));
+			lost.dissolve(handler);
+		}
+		prevHealth = p.getHealth();
 	}
 
 	//draw the background, text, buttons etc
@@ -52,6 +75,8 @@ public class UI extends Menu{
 		planetName.render(renderer);
 		score.render(renderer);
 		pause.render(renderer, texture);
+		health.render(renderer, texture);
+		for (Line l : healthOutline) l.render(renderer, texture);
 		if (SettingsMenu.FPS_COUNTER) fpsCounter.render(renderer);
 	}
 

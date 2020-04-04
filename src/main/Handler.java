@@ -16,15 +16,11 @@ import rendering.FadingText;
 import rendering.Renderer;
 import rendering.Texture;
 import rendering.Window;
-import sprites.Block;
-import sprites.Bullet;
-import sprites.Enemy;
-import sprites.Particle;
-import sprites.Player;
-import sprites.ShootingStar;
+import sprites.*;
 
 public class Handler {
 	private ArrayList<Block> blocks = new ArrayList<>();
+	private ArrayList<Block> fakeBlocks = new ArrayList<>();
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Zone> zones = new ArrayList<>();
 	private ArrayList<Bullet> bullets = new ArrayList<>();
@@ -152,22 +148,28 @@ public class Handler {
 			camera.render(renderer, alpha);
 			
 			for (Block b : blocks) {
-				if (camera != null && camHitbox.intersects(b.getHitbox())) {
+				if (camera != null && (camHitbox.intersects(b.getHitbox()) || b.isFixedScreenLocation())) {
+					b.render(renderer, texture, alpha);
+				}
+			}
+			for (Block b : fakeBlocks) {
+				if (camera != null && (camHitbox.intersects(b.getHitbox()) || b.isFixedScreenLocation())) {
 					b.render(renderer, texture, alpha);
 				}
 			}
 			for (Enemy e : enemies) {
-				if (camera != null && camHitbox.intersects(e.getHitbox())) {
+				if (camera != null && (camHitbox.intersects(e.getHitbox()) || e.isFixedScreenLocation())) {
 					e.render(renderer, texture, alpha);
 				}
 			}
 			for (Bullet b : bullets) {
-				if (camera != null && camHitbox.intersects(b.getHitbox())) {
+				if (camera != null && (camHitbox.intersects(b.getHitbox()) || b.isFixedScreenLocation())) {
 					b.render(renderer, texture, alpha);
 				}
 			}
+
 			for (Particle p : particles) {
-				if (camera != null && camHitbox.intersects(p.getHitbox())) {
+				if (camera != null && (camHitbox.intersects(p.getHitbox()) || p.isFixedScreenLocation())) {
 					p.render(renderer, texture, alpha);
 				}
 			}
@@ -181,8 +183,10 @@ public class Handler {
 			}
 			
 			if (player != null) player.render(renderer, texture, alpha);
-			
+
+
 			ui.render(renderer, texture, alpha);
+
 			break;
 			
 		case Pause:
@@ -200,6 +204,11 @@ public class Handler {
 			for (Block b : blocks) {
 				if (camera != null && camHitbox.intersects(b.getHitbox())) {
 					b.render(renderer, texture, 0);
+				}
+			}
+			for (Block b : fakeBlocks) {
+				if (camera != null && camHitbox.intersects(b.getHitbox())) {
+					b.render(renderer, texture, alpha);
 				}
 			}
 			for (Enemy e : enemies) {
@@ -220,11 +229,13 @@ public class Handler {
 			for (FadingText f : fadingTexts) {
 				f.render(renderer);
 			}
+
 			
 			if (player != null) player.render(renderer, texture, 0);
-			
+
+
 			ui.render(renderer, texture, alpha);
-			
+
 			pauseMenu.render(renderer, texture, alpha);
 			break;
 		case MainMenu:
@@ -342,6 +353,19 @@ public class Handler {
 	public void clearBlocks() {
 		blocks.clear();
 	}
+
+	public void addFakeBlock(Block b) {
+		fakeBlocks.add(b);
+	}
+	public void removeFakeBlock(Block b) {
+		fakeBlocks.remove(b);
+	}
+	public ArrayList<Block> getFakeBlocks() {
+		return fakeBlocks;
+	}
+	public void clearFakeBlocks() {
+		fakeBlocks.clear();
+	}
 	
 	public void addEnemy(Enemy e) {
 		enemies.add(e);
@@ -407,10 +431,8 @@ public class Handler {
 	public void clearShootingStars() {
 		shootingStars.clear();
 	}
-	public void addFadingText(FadingText f) {
-		fadingTexts.add(f);
-		
-	}
+
+	public void addFadingText(FadingText f) {fadingTexts.add(f);}
 	public void removeFadingText(FadingText f) {
 		fadingTexts.remove(f);
 	}

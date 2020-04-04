@@ -15,10 +15,11 @@ import rendering.Text;
 public class Enemy extends Sprite {
 	
 	private float terminalVel = 1000f;
-	private float moveSpeed = 100f;
+	protected float moveSpeed = 100f;
 	private boolean onBlock = false;
 	private boolean alive = true;
 	protected int scoreValue = 25;
+	protected boolean move = true;
 
 	public Enemy(float x, float y) {
 		super(x, y, 50, 45, 200, 0, 100, 90);
@@ -70,7 +71,10 @@ public class Enemy extends Sprite {
 		//if the enemy has not reached terminal velocity (and they're not on the ground), then add gravity
 		//else, ensure the y velocity is exactly terminal
 		if (-velY < terminalVel && !onBlock) velY -= Spawner.LEVEL.getGravity() * delta;
-		
+
+		if (!move) return;
+
+
 		//*****ENEMY/BLOCK COLLISIONS*****//
 		//x and y collisions are detected and resolved independently by:
 		//update y
@@ -176,7 +180,11 @@ public class Enemy extends Sprite {
 	private Rectangle2D.Float moveRect(Rectangle2D.Float rect, float x, float y){
 		return new Rectangle2D.Float((float)(rect.getX() + x), (float)(rect.getY() + y), (float)rect.getWidth(), (float)rect.getHeight());
 	}
-	
+
+	public void takeDamage(Handler handler){
+		die(handler);
+	}
+
 	public void die(Handler handler) {
 		AudioPlayer.playSound("enemyDeath", 0.5f);
 		PostLevelMenu.LEVEL_SCORE += scoreValue;
@@ -213,8 +221,10 @@ public class Enemy extends Sprite {
 				//velocity of particle
 				float pvelX = px - (x+width/2) + r.nextFloat()*8-4;
 				float pvelY = py - (y+height/2) + r.nextFloat()*8-4;
-				
-				handler.addParticle(new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*5, pvelY*5));
+
+				Particle p = new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*10, pvelY*10, 0);
+				p.setAcceleration(0, -200f);
+				handler.addParticle(p);
 			}
 		}
 	}

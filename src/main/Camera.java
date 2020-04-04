@@ -71,7 +71,7 @@ public class Camera {
 	public void render(Renderer renderer, float alpha) {
 		float lerpX = (1 - alpha) * prevX + alpha * x;
 		float lerpY = (1 - alpha) * prevY + alpha * y;
-		
+
 		Matrix4f view = Matrix4f.translate(-lerpX + Main.WIDTH/2, -lerpY + Main.HEIGHT/2, 0).multiply(Matrix4f.translate(lerpX, lerpY, 0).multiply(Matrix4f.rotate(angle, 0, 0, 1).multiply(Matrix4f.translate(-lerpX, -lerpY, 0))));
 		renderer.setView(view);
 	}

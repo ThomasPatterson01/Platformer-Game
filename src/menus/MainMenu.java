@@ -176,7 +176,7 @@ public class MainMenu extends Menu  {
 		if (play.isClicked()) {
 			play.setClicked(false);
 			Main.GAMESTATE = GameState.Game;
-			Spawner.LEVEL = SettingsMenu.TUTORIAL ? Level.Pluto : Level.Neptune;
+			Spawner.LEVEL = SettingsMenu.TUTORIAL ? Level.Pluto : Level.Mercury;
 			if (seed.length() == 7) {
 				Spawner.SEED = Spawner.CURRENT_SEED = Integer.parseInt(seed, 16);
 				

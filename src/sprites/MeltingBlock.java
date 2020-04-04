@@ -10,7 +10,7 @@ import rendering.Texture;
 public class MeltingBlock extends Block{
 
 	private boolean melting = false;
-	private int meltTimer = 30;
+	private int meltTimer = 20;
 	private boolean melted = false;
 	private float terminalVel = 1000f;
 	private float fallAngle = 0;

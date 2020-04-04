@@ -14,8 +14,8 @@ public class Main {
 	private GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
 	
 	private final int TARGET_UPS = 60;
-	public static final int WIDTH = 1280;
-	public static final int HEIGHT = 720;
+	public static final int WIDTH = 1920;
+	public static final int HEIGHT = 1080;
 	public static int FPS = 0;
 	
 	public static GameState GAMESTATE;

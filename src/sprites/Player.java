@@ -8,18 +8,24 @@ import java.util.Random;
 import main.AudioPlayer;
 import main.Handler;
 import main.Spawner;
+import rendering.Renderer;
+import rendering.Texture;
 
 public class Player extends Sprite{
 	
 	private float terminalVel = 1000f;
 	private float moveSpeed = 500f;
-	private float jumpSpeed = 500f;
+	private float jumpSpeed = 1200f;
 	private boolean onBlock = false;
 	private boolean onSlipBlock = false;
 	private boolean slowingDown = false;
 	private boolean crouching = false;
 	private boolean alive = true;
 	private boolean waitingToStand = false;
+	private float maxHealth = 1f;
+	private float health = maxHealth;
+	private boolean invincible = false;
+	private int invincibleTimer = 0;
 
 	public Player(float x, float y) {
 		super(x, y, 50, 80, 100, 0, 100, 200);
@@ -82,13 +88,23 @@ public class Player extends Sprite{
 		
 		//if the player has not reached terminal velocity (and they're not on the ground), then add gravity
 		//else, ensure the y velocity is exactly terminal
-		if (-velY < terminalVel && !onBlock) velY -= Spawner.LEVEL.getGravity() * delta;
+		if (-velY < terminalVel && !onBlock) velY -= 4 * Spawner.LEVEL.getGravity() * delta;
 		
 		//if dead, dont bother checking collisions, just fall
 		if (!alive) {
 			explode(handler);
 			handler.setPlayer(null);
 			return;
+		}
+
+		if (invincible){
+			invincibleTimer--;
+			if ((invincibleTimer/5) % 2 == 0) col.setAlpha(0.2f);
+			else col.setAlpha(1f);
+			if (invincibleTimer <= 0) {
+				invincible = false;
+				col.setAlpha(1f);
+			}
 		}
 		
 		//*****PLAYER/BLOCK COLLISIONS*****//
@@ -135,15 +151,16 @@ public class Player extends Sprite{
 			if (!e.isAlive()) continue;
 			if (e.getHitbox().intersects(getHitbox())) {
 				if (velY < 0) {
-					e.die(handler);
+					e.takeDamage(handler);
 					float shakeAmplitude = -velY >= terminalVel ? 3f : 1f;
 					handler.getCamera().shake(shakeAmplitude);
 					velY = jumpSpeed;
-					y = e.getY() + e.getHeight()+5;
+					y = e.getY() + e.getHeight() + 5;
 					return;
 				} else {
-					die();
-					velY = 0.4f*jumpSpeed;
+					if (!invincible) {
+						takeDamage(0.3f);
+					}
 				}
 			}
 		}
@@ -204,12 +221,24 @@ public class Player extends Sprite{
 			}
 		}
 	}
-	
+
 	public void die() {
 		AudioPlayer.playSound("playerDeath", 1.0f);
 		alive = false;
+		health = 0;
 		velX = 0;
 		velY = 0;
+	}
+
+	public void takeDamage(float dmg){
+		if (invincible) return;
+		health -= dmg;
+		if (health <= 0.0001f){
+			die();
+			health = 0;
+		}
+		invincibleTimer = 60;
+		invincible = true;
 	}
 	
 	//split the sprite into a 10x20 grid of particles, each with a corresponding texture region
@@ -238,13 +267,15 @@ public class Player extends Sprite{
 				float pvelX = px - (x+width/2) + r.nextFloat()*8-4;
 				float pvelY = py - (y+height/2) + r.nextFloat()*8-4;
 				
-				handler.addParticle(new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*5, pvelY*5));
+				handler.addParticle(new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*5, pvelY*5, 0));
 			}
 		}
 	}
 	
 	//the 5 pixel depth directly below the player, used to check if the player is on top of a block or not
 	public Rectangle2D.Float getOnBlockHitbox(){
+		if (velX > 0) return new Rectangle2D.Float(x-10, y-5, width+10, 5);
+		else if (velX < 0) return new Rectangle2D.Float(x, y-5, width+10, 5);
 		return new Rectangle2D.Float(x, y-5, width, 5);
 	}
 	
@@ -260,5 +291,21 @@ public class Player extends Sprite{
 		if (crouching) return 2f*height;
 		
 		return height;
+	}
+
+	public float getHealth() {
+		return health;
+	}
+
+	public void setHealth(float health) {
+		this.health = health;
+	}
+
+	public float getMaxHealth() {
+		return maxHealth;
+	}
+
+	public boolean isInvincible(){
+		return invincible;
 	}
 }

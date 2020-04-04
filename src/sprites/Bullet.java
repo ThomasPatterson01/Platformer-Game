@@ -5,11 +5,9 @@ import rendering.Color;
 
 public class Bullet extends Sprite {
 	
-	private float bulletSpeed = 150f;
-	private float bulletTimer = 60f*400f/bulletSpeed; //so that the bullet will only travel 400 pixeks
-	private boolean lethal = false; //not lethal for first half second to make it fair
-	private int lethalityTimer = 30;
-	
+	private float bulletSpeed = 500f;
+	private float bulletTimer = 60f*5000f/bulletSpeed; //so that the bullet will only travel 5000 pixels then despawn
+
 	public Bullet(float x, float y, float velX, float velY, Color c) {
 		super(x, y, 10, 10, 300, 0, 100, 100);
 		col = c;
@@ -30,7 +28,7 @@ public class Bullet extends Sprite {
 		}
 		
 		//make the bullet lethal after a second
-		if (--lethalityTimer <= 0 && !lethal) lethal = true;
+		//if (--lethalityTimer <= 0 && !lethal) lethal = true;
 		
 		//if collide with block, remove bullet
 		for (Block b : handler.getBlocks()) {
@@ -40,12 +38,10 @@ public class Bullet extends Sprite {
 		}
 		
 		//if collide with player, kill player and remove bullet
-		if (lethal) { 
-			Player p = handler.getPlayer();
-			if (p != null && p.getHitbox().intersects(getHitbox()) && p.isAlive()) {
-				p.die();
-				handler.removeBullet(this);
-			}
+		Player p = handler.getPlayer();
+		if (p != null && p.getHitbox().intersects(getHitbox()) && p.isAlive() && !p.isInvincible()) {
+			p.takeDamage(0.2f);
+			handler.removeBullet(this);
 		}
 		
 		

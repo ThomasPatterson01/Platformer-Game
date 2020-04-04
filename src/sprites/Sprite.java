@@ -1,8 +1,11 @@
 package sprites;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
 import main.Handler;
+import matrix_math.Matrix4f;
+import matrix_math.Vector4f;
 import rendering.Animation;
 import rendering.Color;
 import rendering.Renderer;
@@ -17,6 +20,7 @@ public abstract class Sprite {
 	protected float prevX, prevY;
 	
 	protected Animation currentAnimation;
+	protected boolean fixedScreenLocation = false;
 	
 	protected Color col;
 	
@@ -54,7 +58,14 @@ public abstract class Sprite {
 	
 	//render to screen, interpolating between the last and current position
 	public void render(Renderer renderer, Texture texture, float alpha) {
-		
+
+		Matrix4f oldView = renderer.getView();
+
+		//if fixed on screen, reset view matrix, then reset it afterwards
+		if (fixedScreenLocation) {
+			renderer.setView(new Matrix4f());
+		}
+
 		float lerpX = (1 - alpha) * prevX + alpha * x;
 		float lerpY = (1 - alpha) * prevY + alpha * y;
 		
@@ -71,10 +82,21 @@ public abstract class Sprite {
 		texture.bind();
 		renderer.drawTextureRegion(texture, lerpX, lerpY, width, height, tx, ty, twidth, theight, col, true);
 		renderer.end();
+
+		renderer.setView(oldView);
 	}
 	
 	public Rectangle2D.Float getHitbox() {
 		return new Rectangle2D.Float(x, y, width, height);
+	}
+
+	public ArrayList<Vector4f> getLines(){
+		ArrayList<Vector4f> lines = new ArrayList<>();
+		lines.add(new Vector4f(x, y, x, y+height));
+		lines.add(new Vector4f(x, y, x+width, y));
+		lines.add(new Vector4f(x+width, y, x+width, y+height));
+		lines.add(new Vector4f(x, y+height, x+width, y+height));
+		return lines;
 	}
 	
 	public float getX() {
@@ -133,5 +155,12 @@ public abstract class Sprite {
 		this.velY = velY;
 	}
 	
-	
+	public void setFixedScreenLocation(boolean b){
+		fixedScreenLocation = b;
+	}
+
+	public boolean isFixedScreenLocation(){
+		return fixedScreenLocation;
+	}
+
 }

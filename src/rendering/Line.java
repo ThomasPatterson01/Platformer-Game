@@ -18,7 +18,7 @@ public class Line {
 		this.c = c;
 	}
 	
-	public void render(Renderer renderer, Texture texture, float alpha) {
+	public void render(Renderer renderer, Texture texture) {
 		//the midpoint of the 2 lines
 		float midX = (x1+x2)/2;
 		float midY = (y1+y2)/2;
@@ -46,4 +46,18 @@ public class Line {
 		//reset the model matrix
 		renderer.setModel(new Matrix4f());
 	}
+
+	public void setCoords(float x1, float y1, float x2, float y2){
+		this.x1 = x1; this.y1 = y1;
+		this.x2 = x2; this.y2 = y2;
+	}
+
+	public void setColor(Color c){
+		this.c = c;
+	}
+
+	public void setWidth(int width){
+		this.width = width;
+	}
+
 }

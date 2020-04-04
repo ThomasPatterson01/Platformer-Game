@@ -4,6 +4,8 @@ import main.Spawner;
 import rendering.Color;
 
 public class Block extends Sprite{
+
+	public boolean hitbox = true;
 		
 	public Block(float x, float y) {
 		super(x, y, 50, 50, 0, 0, 100, 100);
@@ -16,4 +18,11 @@ public class Block extends Sprite{
 		col = new Color(0f, 1f, 0f);
 	}
 
+	public boolean isHitbox() {
+		return hitbox;
+	}
+
+	public void setHitbox(boolean hitbox) {
+		this.hitbox = hitbox;
+	}
 }
