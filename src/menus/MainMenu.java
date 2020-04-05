@@ -29,27 +29,27 @@ public class MainMenu extends Menu  {
 
 	//create all the necessary text/buttons as well as the background
 	public MainMenu() {
-		background = new Background(1920, 0, 1220, 720, new Color(1,1,1));
+		background = new Background(1928, 0, 1220, 720, new Color(1,1,1));
 		
-		play = new Button(0, 200, 1280, 50, new Color(1,1,1));
+		play = new Button(0, 200, Main.WIDTH, 50, new Color(1,1,1));
 		play.setVisibleBackground(false);
 		play.setHoverCol(new Color(0,1,0));
 		play.setBackgroundShape("rectangle");
 		play.setText(new Text("PLAY", 30, 200, new Font("Consolas", java.awt.Font.BOLD, 40), new Color(1,1,1)));
 		
-		settings = new Button(0, 150, 1280, 50, new Color(1,1,1));
+		settings = new Button(0, 150, Main.WIDTH, 50, new Color(1,1,1));
 		settings.setVisibleBackground(false);
 		settings.setHoverCol(new Color(0,1,0));
 		settings.setBackgroundShape("rectangle");
 		settings.setText(new Text("SETTINGS", 30, 150, new Font("Consolas", java.awt.Font.BOLD, 40), new Color(1,1,1)));
 		
-		stats = new Button(0, 100, 1280, 50, new Color(1,1,1));
+		stats = new Button(0, 100, Main.WIDTH, 50, new Color(1,1,1));
 		stats.setVisibleBackground(false);
 		stats.setHoverCol(new Color(0,1,0));
 		stats.setBackgroundShape("rectangle");
 		stats.setText(new Text("STATS", 30, 100, new Font("Consolas", java.awt.Font.BOLD, 40), new Color(1,1,1)));
 		
-		quit = new Button(0, 50, 1280, 50, new Color(1,1,1));
+		quit = new Button(0, 50, Main.WIDTH, 50, new Color(1,1,1));
 		quit.setVisibleBackground(false);
 		quit.setHoverCol(new Color(0,1,0));
 		quit.setBackgroundShape("rectangle");

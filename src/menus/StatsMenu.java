@@ -68,7 +68,7 @@ public class StatsMenu extends Menu{
 	
 	//create all the necessary text/buttons as well as the background
 	public StatsMenu() {
-		background = new Background(3200, 0, 1220, 720, new Color(1,1,1));
+		background = new Background(3209, 0, 1220, 720, new Color(1,1,1));
 		
 		Font titleFont = new Font("Consolas", java.awt.Font.PLAIN, 75);
 		title = new Text("STATISTICS", 400, 630, titleFont, new Color(1,1,1));

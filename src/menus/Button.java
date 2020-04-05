@@ -27,7 +27,7 @@ public class Button {
 		this.height = height;
 		this.col = this.hoverCol = col;
 		
-		tx = 600; ty = 0;
+		tx = 606; ty = 0;
 		twidth = 100; theight = 60;
 	}
 	

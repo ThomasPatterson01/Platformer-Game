@@ -15,12 +15,7 @@ import rendering.Color;
 import rendering.FadingText;
 import rendering.Font;
 import rendering.Text;
-import sprites.Block;
-import sprites.Enemy;
-import sprites.MeltingBlock;
-import sprites.Player;
-import sprites.ShootingEnemy;
-import sprites.SlipBlock;
+import sprites.*;
 
 public class Spawner {
 	
@@ -198,6 +193,11 @@ public class Spawner {
 					handler.addZone(new KillZone(xOffset+x*50, yOffset+y*50, 50, 50));
 				}else if (r == 255 && g == 123 && b == 0) {
 					handler.addZone(new WinZone(xOffset+x*50, yOffset+y*50, 50, 50));
+				}else if (r == 255 && g == 0 && b == 123) {
+					handler.addPickup(new HealthPickup(xOffset+x*50, yOffset+y*50));
+				}
+				else if (r == 123 && g == 0 && b == 255) {
+					handler.addPickup(new Coin(xOffset+x*50, yOffset+y*50));
 				}
 			}
 		}
@@ -210,6 +210,8 @@ public class Spawner {
 	public void spawnRandSection(int length) {
 		float noiseOffset = Spawner.CURRENT_SEED/1000f;
 		float noiseInterval = 0.03f;
+		int coinStretch = 0;
+		float coinHeight = 0;
 		
 		//increment the current seed so it is not identical to the previous level
 		Spawner.CURRENT_SEED += 100000;
@@ -232,12 +234,30 @@ public class Spawner {
 			
 			//adjust the offset so that the sections line up properly
 			if (noiseSeed == 0) yOffset -= height;
-			
-			handler.addZone(new KillZone(xOffset+noiseSeed*50/noiseInterval, yOffset+height-300, 50, 50));
+
+			//powerups
+			//HEALTH: every 100 blocks
+			//otherwise could be coin stretch
+			if (Math.round(noiseSeed/noiseInterval) % 100 == 75){
+				handler.addPickup(new HealthPickup(xOffset+noiseSeed*50/noiseInterval, yOffset+height+250));
+			}else {
+				coinStretch--;
+				if (coinStretch >= 0 && coinHeight > height+10) {
+					handler.addPickup(new Coin(xOffset + noiseSeed * 50 / noiseInterval, coinHeight));
+				} else if (coinStretch < -10) {
+					Random r = new Random((long) (CURRENT_SEED + noiseSeed * 20000));
+					int p = r.nextInt(150);
+					if (p <= 10) coinStretch = p + 4;
+					coinHeight = yOffset + height + (1 + r.nextInt(4)) * 50;
+				}
+			}
+
+			//add kill zone below
+			handler.addZone(new KillZone(xOffset+noiseSeed*50/noiseInterval, yOffset+height-600, 50, 50));
 			
 			//creates a ceiling (4 blocks deep) when the ceiling curve is below a certain value
 			//seed is divided by 5 to lengthen the ceilings
-			float ceilingProbability = 0.3f;
+			float ceilingProbability = 0.4f;
 			double ceilingNoiseValue = ImprovedNoise.noise((noiseSeed+noiseOffset+100)/5f, 1, 1);
 			if (ceilingNoiseValue+0.5 < ceilingProbability) {
 				for (int h = height+400; h < height+550; h+=50) handler.addBlock(new Block(xOffset+noiseSeed*50/noiseInterval, yOffset+h));
@@ -250,7 +270,7 @@ public class Spawner {
 			double holeNoiseValue = ImprovedNoise.noise((noiseSeed+noiseOffset+200)*2f, 1, 1);
 			if (holeNoiseValue+0.5 < holeProbability && Math.round(noiseSeed/noiseInterval)%5 != 0) continue;
 
-			int blockDepth = 20;
+			int blockDepth = 3;
 
 			//decide what type of block based on a separate perlin curve - so that the type is not dependent on height
 			//set block depth to 0 if melting, so that the player can fall through
@@ -270,8 +290,7 @@ public class Spawner {
 			handler.addBlock(b);
 			for (int h = height-blockDepth*50; h < height; h+=50){
 				Block bl = new Block(xOffset+noiseSeed*50/noiseInterval, yOffset+h);
-				bl.setHitbox(false);
-				handler.addFakeBlock(bl);
+				handler.addBlock(bl);
 			}
 			
 			
@@ -293,13 +312,13 @@ public class Spawner {
 	//clear all sprites from the handler
 	public void clear() {
 		handler.clearBlocks();
-		handler.clearFakeBlocks();
 		handler.clearEnemies();
 		handler.clearBullets();
 		handler.clearZones();
 		handler.clearParticles();
 		handler.clearShootingStars();
 		handler.clearFadingTexts();
+		handler.clearPickups();
 		handler.setPlayer(null);
 	}
 }

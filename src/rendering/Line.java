@@ -40,7 +40,7 @@ public class Line {
 		//draw the line
 		renderer.begin();
 		texture.bind();
-		renderer.drawTextureRegion(texture, midX-length/2, midY-width/2, length , width, 620, 20, 1, 1, c, false);
+		renderer.drawTextureRegion(texture, midX-length/2, midY-width/2, length , width, 626, 20, 1, 1, c, false);
 		renderer.end();
 		
 		//reset the model matrix

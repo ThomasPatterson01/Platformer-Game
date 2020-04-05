@@ -57,7 +57,7 @@ public class ShootingStar extends Sprite{
 		private float angle;
 
 		public StarTrail(float x, float y, float angle) {
-			super(x, y, 25, 25, 620, 20, 1, 1);
+			super(x, y, 25, 25, 626, 20, 1, 1);
 			//Color c = Spawner.LEVEL.getBlockColor();
 			//col = new Color(c.getRed(), c.getGreen(), c.getBlue());
 			col = new Color(1,1,0);

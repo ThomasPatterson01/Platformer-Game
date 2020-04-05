@@ -1,3 +1,5 @@
 res/levels/mercury1.png
-300
+150
 res/levels/mercury2.png
+200
+res/levels/mercury3.png

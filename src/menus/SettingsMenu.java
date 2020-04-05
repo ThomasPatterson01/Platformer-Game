@@ -46,7 +46,7 @@ public class SettingsMenu extends Menu{
 	//create all the necessary text/buttons as well as the background
 	public SettingsMenu(Window window) {
 		this.window = window;
-		background = new Background(3200, 0, 1220, 720, new Color(1,1,1));
+		background = new Background(3209, 0, 1220, 720, new Color(1,1,1));
 		
 		loadSettings();
 		

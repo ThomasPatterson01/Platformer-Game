@@ -19,38 +19,54 @@ public class Rectangle {
         this.c = c;
     }
 
-    public void dissolve(Handler handler) {
 
-        Random r = new Random();
-        for (int i = (int)x; i < x+width; i+=5) {
-            for (int j = (int)y; j < y+height; j+=5) {
-
-                //location and dimensions of particle
-                float pwidth = 5;
-                float pheight = 5;
-
-                //velocity of particle
-                float pvelX = r.nextFloat()*20-10;
-                float pvelY = j - (y+height/2) + r.nextFloat()*8-4;
-
-                Particle p = new Particle(i, j, pwidth, pheight, 620, 20, 1, 1, c, pvelX*8, pvelY*8, (int)width/20-(int)((i-x)/20));
-                p.setAcceleration(0, 300);
-                p.setFixedScreenLocation(true);
-                handler.addParticle(p);
-            }
-        }
-    }
 
     public void render(Renderer renderer, Texture texture) {
         //draw the rectangle
         renderer.begin();
         texture.bind();
-        renderer.drawTextureRegion(texture, x, y, width , height, 620, 20, 1, 1, c, false);
+        renderer.drawTextureRegion(texture, x, y, width , height, 626, 20, 1, 1, c, false);
         renderer.end();
     }
 
-    public void setWidth(float width){
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public Color getCol() {
+        return c;
+    }
+
+    public void setCol(Color c) {
+        this.c = c;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
         this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
 }

@@ -29,7 +29,7 @@ public class PostLevelMenu extends Menu{
 
 	//create all the necessary text/buttons as well as the background
 	public PostLevelMenu() {
-		background = new Background(700, 0, 1210, 720, Spawner.LEVEL.getBlockColor());
+		background = new Background(707, 0, 1210, 720, Spawner.LEVEL.getBlockColor());
 		
 		Font titleFont = new Font("Consolas", java.awt.Font.PLAIN, 75);
 		title = new Text("[PLANET_NAME] COMPLETE", 330, 630, titleFont, new Color(1,1,1));

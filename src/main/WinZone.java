@@ -49,10 +49,10 @@ public class WinZone extends Zone {
 		//for now, rendered in its own batch.
 		renderer.begin();
 		texture.bind();
-		renderer.drawTextureRegion(texture, x, y, width/2, height/2, 620, 20, 1, 1, new Color(1,1,1, transparency), true);
-		renderer.drawTextureRegion(texture, x+width/2, y+height/2, width/2, height/2, 620, 20, 1, 1, new Color(1,1,1, transparency), true);
-		renderer.drawTextureRegion(texture, x+width/2, y, width/2, height/2, 620, 20, 1, 1, new Color(0,0,0, transparency), true);
-		renderer.drawTextureRegion(texture, x, y+height/2, width/2, height/2, 620, 20, 1, 1, new Color(0,0,0, transparency), true);
+		renderer.drawTextureRegion(texture, x, y, width/2, height/2, 626, 20, 1, 1, new Color(1,1,1, transparency), true);
+		renderer.drawTextureRegion(texture, x+width/2, y+height/2, width/2, height/2, 626, 20, 1, 1, new Color(1,1,1, transparency), true);
+		renderer.drawTextureRegion(texture, x+width/2, y, width/2, height/2, 626, 20, 1, 1, new Color(0,0,0, transparency), true);
+		renderer.drawTextureRegion(texture, x, y+height/2, width/2, height/2, 626, 20, 1, 1, new Color(0,0,0, transparency), true);
 		renderer.end();
 	}
 

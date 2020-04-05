@@ -30,6 +30,7 @@ public class Camera {
 	
 	//starts the shaking animation by setting the amplitude and resetting the timer
 	public void shake(float amplitude) {
+		System.out.println(amplitude);
 		AudioPlayer.playSound("groundShake", 0.1f);
 		maxAmplitude = amplitude;
 		shakeTimer = 0f;
@@ -58,7 +59,7 @@ public class Camera {
 			
 			//shake follows the curve y=(e^-0.5)*(sin2x+cos2x) and is proportianal to the max ground tilt of the level
 			//therefore the higher the max ground tilt of the planet, the more it will shake
-			shakeTimer += 0.2f;
+			shakeTimer += 0.1f;
 			angle = (float)((0.3f+Spawner.LEVEL.getMaxGroundTilt()/22.5)*maxAmplitude*Math.pow(Math.E, -0.5f*shakeTimer)*(Math.sin(2*shakeTimer)+Math.cos(2*shakeTimer)));
 			
 			//the actual tilt of the planet

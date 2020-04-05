@@ -28,7 +28,7 @@ public class Player extends Sprite{
 	private int invincibleTimer = 0;
 
 	public Player(float x, float y) {
-		super(x, y, 50, 80, 100, 0, 100, 200);
+		super(x, y, 45, 80, 101, 0, 100, 200);
 	}
 	
 	//left/a = move left
@@ -92,7 +92,7 @@ public class Player extends Sprite{
 		
 		//if dead, dont bother checking collisions, just fall
 		if (!alive) {
-			explode(handler);
+			Particle.explode(this, 10, 20, 5, 5, 0, 0, handler);
 			handler.setPlayer(null);
 			return;
 		}
@@ -156,6 +156,7 @@ public class Player extends Sprite{
 					handler.getCamera().shake(shakeAmplitude);
 					velY = jumpSpeed;
 					y = e.getY() + e.getHeight() + 5;
+					health = Math.min(maxHealth, health + 0.02f);
 					return;
 				} else {
 					if (!invincible) {
@@ -239,37 +240,6 @@ public class Player extends Sprite{
 		}
 		invincibleTimer = 60;
 		invincible = true;
-	}
-	
-	//split the sprite into a 10x20 grid of particles, each with a corresponding texture region
-	//the particles then move away from the centre of the sprite, fading over time
-	private void explode(Handler handler) {
-		int numPx = 10;
-		int numPy = 20;
-		
-		Random r = new Random();
-		for (int i = 0; i < numPx; i++) {
-			for (int j = 0; j < numPy; j++) {
-				
-				//location and dimensions of particle
-				float pwidth = width/numPx;
-				float pheight = height/numPy;
-				float px = x + i*pwidth;
-				float py = y + j*pheight;
-				
-				//location and dimensions of texture region
-				float ptwidth = twidth/numPx;
-				float ptheight = theight/numPy;
-				float ptx = tx + i*ptwidth;
-				float pty = ty + (numPy-1-j)*ptheight;
-				
-				//velocity of particle
-				float pvelX = px - (x+width/2) + r.nextFloat()*8-4;
-				float pvelY = py - (y+height/2) + r.nextFloat()*8-4;
-				
-				handler.addParticle(new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*5, pvelY*5, 0));
-			}
-		}
 	}
 	
 	//the 5 pixel depth directly below the player, used to check if the player is on top of a block or not

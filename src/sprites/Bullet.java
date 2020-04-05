@@ -9,7 +9,7 @@ public class Bullet extends Sprite {
 	private float bulletTimer = 60f*5000f/bulletSpeed; //so that the bullet will only travel 5000 pixels then despawn
 
 	public Bullet(float x, float y, float velX, float velY, Color c) {
-		super(x, y, 10, 10, 300, 0, 100, 100);
+		super(x, y, 10, 10, 303, 0, 100, 100);
 		col = c;
 		
 		//velX and velY are passed in as values between 0 and 1, so we must multiply by the desired speed of the bullet

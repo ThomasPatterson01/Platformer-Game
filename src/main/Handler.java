@@ -20,13 +20,13 @@ import sprites.*;
 
 public class Handler {
 	private ArrayList<Block> blocks = new ArrayList<>();
-	private ArrayList<Block> fakeBlocks = new ArrayList<>();
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Zone> zones = new ArrayList<>();
 	private ArrayList<Bullet> bullets = new ArrayList<>();
 	private ArrayList<Particle> particles = new ArrayList<>();
 	private ArrayList<ShootingStar> shootingStars = new ArrayList<>();
 	private ArrayList<FadingText> fadingTexts = new ArrayList<>();
+	private ArrayList<Pickup> pickups = new ArrayList<>();
 	
 	private Player player;
 	private Camera camera;
@@ -73,8 +73,8 @@ public class Handler {
 			ui.update(this, delta);
 			
 			if (player != null) player.update(this, delta);
-			for (Block b : blocks) {
-				b.update(this, delta);
+			for (int i = blocks.size()-1; i > -1; i--) {
+				blocks.get(i).update(this, delta);
 			}
 			
 			//cant be a for-each loop because the sprite may try to remove itself from the list, causing a crash.
@@ -93,6 +93,9 @@ public class Handler {
 			}
 			for (int i = fadingTexts.size()-1; i > -1; i--) {
 				fadingTexts.get(i).update(this, delta);
+			}
+			for (int i = pickups.size()-1; i > -1; i--) {
+				pickups.get(i).update(this, delta);
 			}
 			for (Zone z : zones) {
 				z.update(this, delta);
@@ -146,13 +149,11 @@ public class Handler {
 				s.render(renderer, texture, alpha);
 			}
 			camera.render(renderer, alpha);
-			
-			for (Block b : blocks) {
-				if (camera != null && (camHitbox.intersects(b.getHitbox()) || b.isFixedScreenLocation())) {
-					b.render(renderer, texture, alpha);
-				}
+
+			for (Pickup p : pickups) {
+				p.render(renderer, texture, alpha);
 			}
-			for (Block b : fakeBlocks) {
+			for (Block b : blocks) {
 				if (camera != null && (camHitbox.intersects(b.getHitbox()) || b.isFixedScreenLocation())) {
 					b.render(renderer, texture, alpha);
 				}
@@ -181,6 +182,7 @@ public class Handler {
 			for (FadingText f : fadingTexts) {
 				f.render(renderer);
 			}
+
 			
 			if (player != null) player.render(renderer, texture, alpha);
 
@@ -199,16 +201,13 @@ public class Handler {
 			}
 			
 			camera.render(renderer, 0);
-			
-			
+
+			for (Pickup p : pickups) {
+				p.render(renderer, texture, alpha);
+			}
 			for (Block b : blocks) {
 				if (camera != null && camHitbox.intersects(b.getHitbox())) {
 					b.render(renderer, texture, 0);
-				}
-			}
-			for (Block b : fakeBlocks) {
-				if (camera != null && camHitbox.intersects(b.getHitbox())) {
-					b.render(renderer, texture, alpha);
 				}
 			}
 			for (Enemy e : enemies) {
@@ -353,19 +352,6 @@ public class Handler {
 	public void clearBlocks() {
 		blocks.clear();
 	}
-
-	public void addFakeBlock(Block b) {
-		fakeBlocks.add(b);
-	}
-	public void removeFakeBlock(Block b) {
-		fakeBlocks.remove(b);
-	}
-	public ArrayList<Block> getFakeBlocks() {
-		return fakeBlocks;
-	}
-	public void clearFakeBlocks() {
-		fakeBlocks.clear();
-	}
 	
 	public void addEnemy(Enemy e) {
 		enemies.add(e);
@@ -441,6 +427,19 @@ public class Handler {
 	}
 	public void clearFadingTexts() {
 		fadingTexts.clear();
+	}
+
+	public void addPickup(Pickup p) {
+		pickups.add(p);
+	}
+	public void removePickup(Pickup p) {
+		pickups.remove(p);
+	}
+	public ArrayList<Pickup> getPickups() {
+		return pickups;
+	}
+	public void clearPickups() {
+		pickups.clear();
 	}
 
 	public Player getPlayer() {

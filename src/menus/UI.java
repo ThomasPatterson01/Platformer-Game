@@ -8,6 +8,7 @@ import matrix_math.Matrix4f;
 import matrix_math.Vector4f;
 import rendering.*;
 import sprites.Background;
+import sprites.Particle;
 import sprites.Player;
 
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ public class UI extends Menu{
 
 	private ArrayList<Line> healthOutline = new ArrayList<>();
 	private Rectangle health;
-	private float prevHealth = -1;
+	private float prevHealth = 0;
 	
 	//create all the necessary text/buttons as well as the background
 	public UI() {
-		background = new Background(700, 0, 1210, 720, Spawner.LEVEL.getBlockColor());
+		background = new Background(707, 0, 1210, 720, Spawner.LEVEL.getBlockColor());
 		
 		Font textFont = new Font("Consolas", java.awt.Font.PLAIN, 20);
 		planetName = new Text("PLANET_NAME", 20, Main.HEIGHT-50, textFont, new Color(1,1,1));
@@ -37,7 +38,7 @@ public class UI extends Menu{
 		
 		fpsCounter = new Text("FPS: [FPS]", 200, Main.HEIGHT-30, textFont, new Color(0.5f,0.5f,0.5f));
 
-		float healthX = 560, healthY = Main.HEIGHT - 70;
+		float healthX = 560, healthY = Main.HEIGHT-70;
 		float healthW = 800, healthH = 30;
 
 		health = new Rectangle(healthX, healthY, healthW, healthH, new Color(0, 1, 0));
@@ -59,12 +60,21 @@ public class UI extends Menu{
 		Player p = handler.getPlayer();
 		if (p == null) return;
 		if (p.getHealth() == prevHealth) return;
-		health.setWidth(800f*(p.getHealth())/p.getMaxHealth());
 		if (p.getHealth() < prevHealth){
-			Rectangle lost = new Rectangle(560+800f*(p.getHealth())/p.getMaxHealth(), Main.HEIGHT-70, 800f*(prevHealth - p.getHealth())/p.getMaxHealth(), 30, new Color(0, 1, 0));
-			lost.dissolve(handler);
+			health.setWidth(800f*(p.getHealth())/p.getMaxHealth());
+			Rectangle lost = new Rectangle(560+800f*(p.getHealth())/p.getMaxHealth(),  Main.HEIGHT-70, 800f*(prevHealth - p.getHealth())/p.getMaxHealth(),  30, new Color(0, 1, 0));
+			Particle.dissolve(lost, (int)lost.getWidth()/5, (int)lost.getHeight()/5, 8, 8, handler);
+			prevHealth = p.getHealth();
+		}else{
+			if (p.getHealth() - prevHealth < p.getMaxHealth()/100) {
+				prevHealth = p.getHealth();
+			}else{
+				prevHealth += p.getMaxHealth()/100;
+			}
+			health.setWidth(800f*(prevHealth)/p.getMaxHealth());
 		}
-		prevHealth = p.getHealth();
+
+
 	}
 
 	//draw the background, text, buttons etc

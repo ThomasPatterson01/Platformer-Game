@@ -10,14 +10,16 @@ import rendering.Texture;
 public class MeltingBlock extends Block{
 
 	private boolean melting = false;
-	private int meltTimer = 20;
+	private int meltTimer = 30;
 	private boolean melted = false;
-	private float terminalVel = 1000f;
+	private float terminalVel = 2000f;
 	private float fallAngle = 0;
 	private float fallAngleVelocity;
+	private float originalY;
 	
 	public MeltingBlock(float x, float y, float fallAngleVelocity) {
 		super(x, y);
+		this.originalY = 0;
 		this.fallAngleVelocity = fallAngleVelocity;
 	}
 	
@@ -25,9 +27,13 @@ public class MeltingBlock extends Block{
 		super.update(handler, delta);
 		
 		//if melted, and terminal velocity not reached, apply gravity
-		if (-velY < terminalVel && melted) velY -= Spawner.LEVEL.getGravity() * delta;
+		if (-velY < terminalVel && melted) velY -= 3*Spawner.LEVEL.getGravity() * delta;
 			
-		if (melted) fallAngle += fallAngleVelocity;
+		if (melted){
+			fallAngle += fallAngleVelocity;
+			if (originalY - y > 2000f) handler.removeBlock(this);
+		}
+
 		
 		if (melting){
 			//if meltTimer <= 0 then the block has melted
@@ -62,7 +68,7 @@ public class MeltingBlock extends Block{
 		texture.bind();
 		renderer.drawTextureRegion(texture, lerpX, lerpY, width, height, tx, ty, twidth, theight, col, true);
 		//a cap is drawn over the top of the block with an orange filter applied
-		renderer.drawTextureRegion(texture, lerpX, lerpY + height-10, width, 10, 500, ty, 100, 20, new Color(1f, 0.64f, 0f), true); 
+		renderer.drawTextureRegion(texture, lerpX, lerpY + height-10, width, 10, 505, ty, 100, 20, new Color(1f, 0.64f, 0f), true);
 		renderer.end();
 		renderer.setModel(new Matrix4f());
 	}

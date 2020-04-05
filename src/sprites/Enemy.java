@@ -22,7 +22,7 @@ public class Enemy extends Sprite {
 	protected boolean move = true;
 
 	public Enemy(float x, float y) {
-		super(x, y, 50, 45, 200, 0, 100, 90);
+		super(x, y, 50, 45, 202, 0, 100, 90);
 		col = Spawner.LEVEL.getEnemyColor();
 		velX = moveSpeed;
 	}
@@ -46,7 +46,7 @@ public class Enemy extends Sprite {
 		//if dead, dont move, just disappear after deathTimer runs out
 		if (!alive) {
 			handler.removeEnemy(this);
-			explode(handler);
+			Particle.explode(this, 10, 10, 10, 10, 0, -200, handler);
 			return;
 		}
 		
@@ -194,39 +194,6 @@ public class Enemy extends Sprite {
 		Font textFont = new Font("Consolas", java.awt.Font.BOLD, 30);
 		Text planetName = new Text("+" + Integer.toString(scoreValue), x-5, y, textFont, new Color(col.getRed(), col.getGreen(), col.getBlue()));
 		handler.addFadingText(new FadingText(planetName, 0, 60, 0.75f, 0, true));
-	}
-	
-	//split the sprite into a 10x10 grid of particles, each with a corresponding texture region
-	//the particles then move away from the centre of the sprite, fading over time
-	private void explode(Handler handler) {
-		int numPx = 10;
-		int numPy = 10;
-		
-		Random r = new Random();
-		for (int i = 0; i < numPx; i++) {
-			for (int j = 0; j < numPy; j++) {
-				
-				//location and dimensions of particle
-				float pwidth = width/numPx;
-				float pheight = height/numPy;
-				float px = x + i*pwidth;
-				float py = y + j*pheight;
-				
-				//location and dimensions of texture region
-				float ptwidth = twidth/numPx;
-				float ptheight = theight/numPy;
-				float ptx = tx + i*ptwidth;
-				float pty = ty + (numPy-1-j)*ptheight;
-				
-				//velocity of particle
-				float pvelX = px - (x+width/2) + r.nextFloat()*8-4;
-				float pvelY = py - (y+height/2) + r.nextFloat()*8-4;
-
-				Particle p = new Particle(px, py, pwidth, pheight, ptx, pty, ptwidth, ptheight, col, pvelX*10, pvelY*10, 0);
-				p.setAcceleration(0, -200f);
-				handler.addParticle(p);
-			}
-		}
 	}
 	
 	//the 2 pixel depth directly below the enemy, used to check if the enemy is on top of a block or not

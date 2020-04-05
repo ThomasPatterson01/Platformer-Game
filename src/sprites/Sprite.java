@@ -139,6 +139,38 @@ public abstract class Sprite {
 		this.height = height;
 	}
 
+	public float getTx() {
+		return tx;
+	}
+
+	public void setTx(float tx) {
+		this.tx = tx;
+	}
+
+	public float getTy() {
+		return ty;
+	}
+
+	public void setTy(float ty) {
+		this.ty = ty;
+	}
+
+	public float getTwidth() {
+		return twidth;
+	}
+
+	public void setTwidth(float twidth) {
+		this.twidth = twidth;
+	}
+
+	public float getTheight() {
+		return theight;
+	}
+
+	public void setTheight(float theight) {
+		this.theight = theight;
+	}
+
 	public float getVelX() {
 		return velX;
 	}

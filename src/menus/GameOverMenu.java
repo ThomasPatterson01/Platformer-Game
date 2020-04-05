@@ -23,7 +23,7 @@ public class GameOverMenu extends Menu{
 	//create all the necessary text/buttons as well as the background
 	public GameOverMenu(Handler handler) {
 		this.handler = handler;
-		background = new Background(620, 20, 1, 1, new Color(0,0,0));
+		background = new Background(626, 20, 1, 1, new Color(0,0,0));
 		
 		Font titleFont = new Font("Consolas", java.awt.Font.PLAIN, 75);
 		title = new Text("GAME OVER", 470, 630, titleFont, new Color(1,1,1));

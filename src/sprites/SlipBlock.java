@@ -22,7 +22,7 @@ public class SlipBlock extends Block{
 		texture.bind();
 		renderer.drawTextureRegion(texture, lerpX, lerpY, width, height, tx, ty, twidth, theight, col, true);
 		//a cap is drawn over the top of the block with an light blue filter applied
-		renderer.drawTextureRegion(texture, lerpX, lerpY + height-10, width, 10, 500, ty, 100, 20, new Color(0f,0.75f, 1f), true);
+		renderer.drawTextureRegion(texture, lerpX, lerpY + height-10, width, 10, 505, ty, 100, 20, new Color(0f,0.75f, 1f), true);
 		renderer.end();
 	}
 
